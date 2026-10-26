@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // The Express backend talks to Firestore exclusively through the Admin
+    // SDK (server/firebase.js), which bypasses these rules entirely. This
+    // locks out any *direct* client access (browser/mobile SDKs, or a
+    // leaked API key) so the API stays the single point of validation for
+    // severity scoring, status transitions, and geo-shard routing.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
